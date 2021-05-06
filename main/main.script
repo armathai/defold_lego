@@ -1,0 +1,72 @@
+require('lego.lego')
+
+local function on_test1_update(self, new_value, old_value, uuid)
+	print('test1 update: ' .. new_value .. ' => ' .. old_value .. ' uuid: ' .. uuid)
+end
+
+local function on_test2_update(self, new_value, old_value, uuid)
+	print('test2 update: ' .. new_value .. ' => ' .. old_value .. ' uuid: ' .. uuid)
+end
+
+local function on_custom_event(self, p1, p2, p3)
+	print('custom event: ' .. p1, p2, p3)
+end
+
+local function test_command_1()
+	print('test command 1: ')
+end
+
+local function test_command_2(p1, p2, p3)
+	print('test command 2: ' .. p1, p2, p3)
+end
+
+local function test_command_3(p1, p2, p3)
+	print('test command 3: ' .. p1, p2, p3)
+end
+
+local function test_command_4(self, p1, p2, p3)
+	-- print(p1)
+	print('test command 4: ' .. p1, p2, p3)
+end
+
+local function test_gurd_true()
+	return true
+end
+
+local function test_gurd_false()
+	return false
+end
+
+
+function init(self)
+	self.__name__ = 'main'
+	self.__uuid__ = 'main_uuid'
+	self.model = {test1 = 1, test2 = 2}
+
+	-- observable properties
+	Lego.observe.make_observable(self, 'model')
+
+	Lego.event.on('main_model_test1_update', on_test1_update, self)
+	Lego.event.on('main_model_test2_update', on_test2_update, self)
+
+	self.model.test1 = 2
+	self.model.test1 = 2
+	
+	self.model.test2 = 3
+	self.model.test2 = 3
+	self.model.test2 = 4
+	
+	
+	-- custorm events
+	Lego.event.once('custom_event', on_custom_event, self)
+	Lego.event.emit('custom_event', 1, 2, 3)
+
+	-- commands
+	Lego.command.execute(test_command_1)
+	Lego.command.payload('a', 'b', 'c').execute(test_command_2)
+	Lego.command.payload('d', 'e', 'f').guard(test_gurd_true).execute(test_command_3)
+	Lego.command.payload('g', 'h', 'i').guard(test_gurd_false).execute(test_command_3)
+
+	Lego.command.on('some_event', test_command_4)
+	Lego.event.emit('some_event', 1, 2, 3)
+end

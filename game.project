@@ -1,0 +1,23 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 960
+height = 540
+high_dpi = 1
+samples = 4
+
+[project]
+title = defold_lego
+version = 1.0
+
+[library]
+include_dirs = lego
+
+[physics]
+scale = 0.01
+gravity_y = -300.0
+
