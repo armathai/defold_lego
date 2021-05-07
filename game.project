@@ -12,7 +12,7 @@ samples = 4
 
 [project]
 title = defold_lego
-version = 1.0
+version = 1.1
 
 [library]
 include_dirs = lego
