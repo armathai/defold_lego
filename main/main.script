@@ -43,11 +43,11 @@ function init(self)
     self.__uuid__ = 'main_uuid'
     self.model = {test1 = 1, test2 = 2}
 
-    -- observable properties
     Lego.observe.make_observable(self, 'model')
-
+    
     Lego.event.on('main_model_test1_update', on_test1_update, self)
     Lego.event.on('main_model_test2_update', on_test2_update, self)
+    
 
     self.model.test1 = 2
     self.model.test1 = 2

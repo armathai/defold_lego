@@ -8,6 +8,9 @@ function M.make_observable(self, prop_name)
     t = {}
 
     Utils.extend_metatable(t, {
+        __index = function(t, k) 
+            return p[k]
+        end,
         __newindex = function(t, k, v)
             if p[k] == v then return end
 
