@@ -26,7 +26,6 @@ local function test_command_3(p1, p2, p3)
 end
 
 local function test_command_4(self, p1, p2, p3)
-    -- print(p1)
     print('test command 4: ' .. p1, p2, p3)
 end
 
@@ -57,8 +56,8 @@ function init(self)
     self.model.test2 = 4
 
     -- custorm events
-    Lego.event.once('custom_event', on_custom_event, self)
-    Lego.event.emit('custom_event', 1, 2, 3)
+    Lego.event.on('custom_event', on_custom_event, self)     
+    Lego.event.emit('custom_event', 1, 2, 3)    
 
     -- commands
     Lego.command.execute(test_command_1)

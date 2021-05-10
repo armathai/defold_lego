@@ -9,9 +9,7 @@ function M.emit(event_name, ...)
     local ll_copy = Utils.shallow_copy_table(ll)
 
     for _, v in pairs(ll_copy) do
-        if v.once then
-            M._remove_listener(event_name, v.callback, v.context)
-        end
+        if v.once then M._remove_listener(event_name, v.callback, v.context) end
 
         v.callback(v.context, ...)
     end
@@ -39,11 +37,15 @@ function M.remove_listeners_of(context)
     for k1, v1 in pairs(M.__events__) do
         local ll = M._get_listeners(k1)
 
-        for k2, v2 in pairs(ll) do
-            if v2.context == context then
-                M._remove_listener(k1, v2.callback, v2.context)
-            end
+        for k2, v2 in pairs(ll) do            
+            if v2.context == context then M._remove_listener(k1, v2.callback, v2.context) end
         end
+    end
+end
+
+function M.remove_listeners(event)
+    for k1, v1 in pairs(M.__events__) do
+        if k1 == event then M.__events__[k1] = nil end
     end
 end
 
@@ -62,9 +64,7 @@ function M._remove_listener(event_name, callback, context)
     if not ll then return end
 
     for k, v in pairs(ll) do
-        if v.callback == callback and v.context == context then
-            table.remove(ll, k)
-        end
+        if v.callback == callback and v.context == context then ll[k] = nil end
     end
 
     if #ll == 0 then ll = nil end
