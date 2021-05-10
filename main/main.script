@@ -38,22 +38,19 @@ local function test_gurd_false()
 end
 
 function init(self)
-    self.__name__ = 'main'
-    self.__uuid__ = 'main_uuid'
-    self.model = {test1 = 1, test2 = 2}
+    self.__model__ = {
+        __name__ = 'main',
+        __uuid__ = 'main_uuid'
+    }
+    self.__model__.model = {test1 = 1, test2 = 2}
 
-    Lego.observe.make_observable(self, 'model')
+    Lego.observe.make_observable(self.__model__, 'model')
     
     Lego.event.on('main_model_test1_update', on_test1_update, self)
     Lego.event.on('main_model_test2_update', on_test2_update, self)
-    
 
-    self.model.test1 = 2
-    self.model.test1 = 2
-
-    self.model.test2 = 3
-    self.model.test2 = 3
-    self.model.test2 = 4
+    self.__model__.model.test1 = 2
+    self.__model__.model.test2 = 3
 
     -- custorm events
     Lego.event.on('custom_event', on_custom_event, self)     

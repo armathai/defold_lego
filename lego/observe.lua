@@ -8,7 +8,7 @@ function M.make_observable(self, prop_name)
     t = {}
 
     Utils.extend_metatable(t, {
-        __index = function(t, k) 
+        __index = function(t, k)
             return p[k]
         end,
         __newindex = function(t, k, v)
@@ -17,13 +17,14 @@ function M.make_observable(self, prop_name)
             local old_value = p[k]
             p[k] = v
 
-            local event_name = self.__name__ .. '_' .. prop_name .. '_' .. k .. '_' .. 'update'
-            Lego.event.emit(event_name, v, old_value, self.__uuid__)
+            local event_name = prop_name .. '_' .. k .. '_' .. 'update'
+            Lego.event.emit(event_name, v, old_value, prop_name)
+            -- 
+            print('Lego: ' .. event_name .. '  ' .. prop_name)
         end
-
     })
 
-    self[prop_name] = t
+    rawset(self, prop_name, t)
 end
 
 function M.remove_observable(self, prop_name)
