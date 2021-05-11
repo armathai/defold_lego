@@ -1,5 +1,4 @@
 require('lego.lego')
-local Utils = require('lego.utils')
 
 local function on_test1_update(self, new_value, old_value, uuid)
     print('test1 update: ' .. new_value .. ' => ' .. old_value .. ' uuid: ' .. uuid)
@@ -38,19 +37,21 @@ local function test_gurd_false()
 end
 
 function init(self)
-    self.__model__ = {
-        __name__ = 'main',
-        __uuid__ = 'main_uuid'
+    self.__root__ = {
+        model = {
+            __uuid__ = 'main_model',
+            test1 = 1,
+            test2 = 2
+        }
     }
-    self.__model__.model = {test1 = 1, test2 = 2}
 
-    Lego.observe.make_observable(self.__model__, 'model')
+    Lego.observe.make_observable(self.__root__, 'model')
     
-    Lego.event.on('main_model_test1_update', on_test1_update, self)
-    Lego.event.on('main_model_test2_update', on_test2_update, self)
-
-    self.__model__.model.test1 = 2
-    self.__model__.model.test2 = 3
+    Lego.event.on('model_test1_update', on_test1_update, self)
+    Lego.event.on('model_test2_update', on_test2_update, self)
+    
+    self.__root__.model.test1 = 2
+    self.__root__.model.test2 = 3
 
     -- custorm events
     Lego.event.on('custom_event', on_custom_event, self)     

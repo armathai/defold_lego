@@ -4,23 +4,22 @@ local M = {}
 
 function M.make_observable(self, prop_name)
     local t = self[prop_name] or {}
-    local p = t
+    t.__uuid__ = t.__uuid__ or Utils.uuid4()
+    local _t = t
     t = {}
 
     Utils.extend_metatable(t, {
         __index = function(t, k)
-            return p[k]
+            return _t[k]
         end,
-        __newindex = function(t, k, v)
-            if p[k] == v then return end
+        __newindex = function(t, k, new_value)
+            if _t[k] == new_value then return end
 
-            local old_value = p[k]
-            p[k] = v
+            local old_value = _t[k]
+            _t[k] = new_value
 
             local event_name = prop_name .. '_' .. k .. '_' .. 'update'
-            Lego.event.emit(event_name, v, old_value, prop_name)
-            -- 
-            print('Lego: ' .. event_name .. '  ' .. prop_name)
+            Lego.event.emit(event_name, new_value, old_value, _t.__uuid__)
         end
     })
 
@@ -28,7 +27,7 @@ function M.make_observable(self, prop_name)
 end
 
 function M.remove_observable(self, prop_name)
-    if (Utils.ensure_key(self, prop_name)) then setmetatable(self[prop_name], nil) end
+    if Utils.ensure_key(self, prop_name) then setmetatable(self[prop_name], nil) end
 end
 
 return M
